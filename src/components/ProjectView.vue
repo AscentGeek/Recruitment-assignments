@@ -1,6 +1,6 @@
 <template>
   <div>
-    project
+    <a>project view</a>
   </div>
 </template>
 

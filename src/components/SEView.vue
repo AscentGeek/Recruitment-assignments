@@ -1,12 +1,12 @@
 <template>
   <div>
-    side view
+    SE Setting
   </div>
 </template>
 
 <script>
 export default {
-  name: "SideView"
+  name: "SEView"
 }
 </script>
 

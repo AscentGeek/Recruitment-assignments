@@ -1,12 +1,12 @@
 <template>
   <div>
-    side view
+    add project
   </div>
 </template>
 
 <script>
 export default {
-  name: "SideView"
+  name: "AddProject"
 }
 </script>
 
