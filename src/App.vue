@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-    <side-view></side-view>
+  <div id="app" class="row">
+    <router-view class="col-sm-9"></router-view>
+    <side-view class="col-sm-3 sidebar"></side-view>
   </div>
 </template>
 
