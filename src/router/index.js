@@ -15,14 +15,17 @@ export default new VueRouter({
         },
         {
             path: '/projects',
+            name: 'projects',
             component: ProjectView,
         },
         {
             path: '/addproject',
+            name: 'addproject',
             component: AddProjectView,
         },
         {
             path: '/se',
+            name: 'se',
             component: SEView,
         }
     ]
