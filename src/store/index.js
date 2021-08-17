@@ -4,26 +4,11 @@ import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
 
-// const storage = {
-//     fetch(){
-//         const arr = [];
-//         if(localStorage.length > 0){
-//             for (let i = 0; i < localStorage.length; i++){
-//                 if(localStorage.key(i) !== 'loglevel:webpack-dev-server')
-//                     arr.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
-//             }
-//         }
-//         return arr;
-//     }
-// };
-
-
 export default new Vuex.Store({
     plugins:[
         createPersistedState()
     ],
     state: {
-        // projects: storage.fetch()
         projects: []
     },
     getters: {
@@ -48,7 +33,6 @@ export default new Vuex.Store({
             };
             state.projects.push(obj);
             // console.log(obj)
-            // localStorage.setItem(item, JSON.stringify(obj));
         },
         updateProject(state, item){
             for (let i=0; i<state.projects.length; i++){
