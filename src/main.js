@@ -8,8 +8,14 @@ Vue.config.productionTip = false
 
 export const eventBus = new Vue({
   methods:{
-    test(data){
-      eventBus.$emit('test', data)
+    select(data){
+      eventBus.$emit('select', data)
+    },
+    addERow(){
+      eventBus.$emit('addERow')
+    },
+    addSERow(){
+      eventBus.$emit('addSERow')
     },
   }
 })

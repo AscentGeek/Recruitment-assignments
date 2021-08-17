@@ -93,13 +93,13 @@
         <table class="table table-striped">
           <thead>
           <tr class="table-primary">
-            <th style="border-bottom: 1px solid black"><input type="checkbox" /></th>
+            <th style="border-bottom: 1px solid black" ><input type="checkbox" v-model="checkE" /></th>
             <th style="border-bottom: 1px solid black" v-for="item in comp1" :key="item.id">{{ item }}</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="item in enemy" :key="item.id">
-            <td><input type="checkbox" :value="item.id" @click="test()" style="margin-top: 10px"/></td>
+          <tr v-for="(item, index) in enemy" :key="index">
+            <td><input type="checkbox" v-model="checkedE[index]" @change="selectERow" style="margin-top: 10px"/></td>
             <td><input v-model="item.name" type="text" class="form-control" maxlength="100"/></td>
             <td><input v-model="item.eURL" type="text" class="form-control" maxlength="100"
                        oninput=" this.value = this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '' );" /></td>
@@ -123,13 +123,13 @@
         <table class="table table-striped">
           <thead>
           <tr class="table-primary">
-            <th style="border-bottom: 1px solid black"><input type="checkbox" /></th>
+            <th style="border-bottom: 1px solid black"><input type="checkbox" v-model="checkSE"/></th>
             <th style="border-bottom: 1px solid black" v-for="item in comp2" :key="item.id">{{ item }}</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="item in se" :key="item.id">
-            <td><input type="checkbox" :value="item.id" @click="test()" style="margin-top: 10px"/></td>
+          <tr v-for="(item, index) in se" :key="index">
+            <td><input type="checkbox" v-model="checkedSE[index]" @change="selectSERow" style="margin-top: 10px"/></td>
             <td>
               <select v-model="item.engine" class="form-select">
                 <option disabled value="">선택</option>
@@ -193,7 +193,7 @@
                 <label for="prank">페이지 노출 순위</label>
                 <input type="checkbox" id="prank" value="" v-model="item.target.prank" class="form-checkbox" />
                 <label for="avgrank">평균 노출 순위</label>
-                <input type="checkbox" id="avgrank" value="" v-model="item.target.avgrank" class="form-checkbox" @click="test(item.target)"/>
+                <input type="checkbox" id="avgrank" value="" v-model="item.target.avgrank" class="form-checkbox" />
               </div>
               <div v-else-if="item.engine == 'NAVER'">
                 <label for="n_total">연간 총 검색량</label>
@@ -210,6 +210,18 @@
           </tbody>
         </table>
       </div>
+    </div>
+
+    <div class="footer">
+      <div>
+        <p class="bold">수정자명 :&nbsp;</p><p>SYSTEM</p>
+        <p>&nbsp;&nbsp;|&nbsp;&nbsp;</p>
+        <p class="bold">수정일시 :&nbsp;</p><p>{{ project.date }}</p>
+      </div>
+      <ul class="nav nav-pills pull-right">
+        <li><button type="button" class="btn btn-default col-auto" @click="out">취소</button></li>
+        <li><button type="button" class="btn btn-primary col-auto" @click="addProject">저장</button></li>
+      </ul>
     </div>
 
     <Modal v-if="showModal" @close="showModal = false">
@@ -242,14 +254,18 @@ export default {
       comp1: ["경쟁사명", "경쟁사URL"],
       comp2: ["검색엔진", "키워드 추출 구분", "국가코드", "언어코드", "추출기간", "추출대상"],
       theads: ["고객사명", "프로젝트명", "사용여부", "산업구분", "브랜드", "브랜드URL", "수정일시"],
-      option: 5,
-      soption: 2,
+      option: 1,
+      soption: 1,
+      checkE: false,
+      checkedE: [],
+      checkSE: false,
+      checkedSE: [],
       project: {
         id: this.$store.getters.createdProjects.length,
         comp: "",
         name: "",
         used: "미사용",
-        date: Date.now(),
+        date: "",
         dRange: "",
         cate: "",
         brand: "",
@@ -257,34 +273,22 @@ export default {
       },
       enemy: [
         {
-          name: "",
-          eURL: ""
-        },
-        {
-          name: "",
-          eURL: ""
-        },
-        {
-          name: "",
-          eURL: ""
-        },
-        {
-          name: "",
-          eURL: ""
-        },
-        {
+          check: false,
           name: "",
           eURL: ""
         }
       ],
-      se: [{
-        engine: '',
-        keyword: '',
-        ccode: '',
-        lcode: '',
-        dRange: '',
-        target: []
-      }],
+      se: [
+        {
+          check: false,
+          engine: '',
+          keyword: '',
+          ccode: '',
+          lcode: '',
+          dRange: '',
+          target: []
+        }
+      ],
       showModal: false,
       comment: "",
       btn: true
@@ -296,6 +300,7 @@ export default {
       if(this.project.name != '' && this.project.comp != '' && this.project.cate != '' && this.project.brand != '' && this.project.cate != '' && this.project.used != '') {
         const enemy = Array()
         const project = this.project
+        project.date = this.getDate
         const se = this.se
 
         for (let i in this.enemy){
@@ -336,6 +341,7 @@ export default {
     movePage(){
       this.$router.push('/projects');
     },
+
     addERow() {
       if(this.option < 10) {
         this.enemy.push({
@@ -358,6 +364,7 @@ export default {
         this.soption++
       }
     },
+
     out(){
       this.comment = '페이지를 벗어나시겠습니까?';
       this.btn = false;
@@ -366,9 +373,23 @@ export default {
     Modal(){
       this.showModal = !this.showModal;
     },
-    test(item){
-      console.log(item)
-      eventBus.$emit('test', this.enemy)
+    selectERow(){
+      const select = 'e'
+      const checked = this.checkedE
+      eventBus.$emit('select', {select, checked})
+    },
+    selectSERow(){
+      const select = 'se'
+      const checked = this.checkedSE
+      eventBus.$emit('select', {select, checked})
+    }
+  },
+
+  computed:{
+    getDate(){
+      const date = new Date()
+      date.setHours(date.getHours() + 9)
+      return date.toISOString().replace('T', ' ').substring(0, 19)
     }
   },
 
@@ -378,6 +399,12 @@ export default {
       this.enemy = this.$route.params.item.enemy
       this.se = this.$route.params.item.se
     }
+    eventBus.$on('addERow', () => {
+      this.addERow()
+    })
+    eventBus.$on('addSERow', () => {
+      this.addSERow()
+    })
   }
 }
 </script>
@@ -423,4 +450,19 @@ td div label{
   margin-left:10px;
 }
 
+.footer{
+  margin: 5px;
+}
+
+.footer ul{
+  margin-top: -40px;
+}
+
+.footer p{
+  display: inline-block;
+}
+
+.bold{
+  font-weight: bold;
+}
 </style>
