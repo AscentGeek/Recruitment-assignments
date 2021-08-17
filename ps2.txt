@@ -1,0 +1,41 @@
+function solution(w){
+    if(w=="") return "";
+    let lcnt = 0;
+    let rcnt = 0;
+    let check = true;
+    let u, v = "";
+
+    for(let i=0; i<w.length; i++) {
+        if (w[i] == "(") lcnt++;
+        else rcnt++
+
+        if (lcnt == rcnt) {
+            u = w.slice(0, i + 1);
+            v = w.slice(i + 1);
+            break;
+        } else if(rcnt > lcnt) check = false
+    }
+
+    if(check) return u + solution(v);
+    else{
+        let str = "(" + solution(v) + ")";
+        u = u.slice(1, u.length-1);
+        for(let i=0; i<u.length; i+=1) {
+            if(u[i]==='(') str += ")";
+            else str += "(";
+        }
+        return str;
+    }
+}
+
+
+console.log(solution("()))((()"));
+// console.log(solution("())()("));
+
+빈 문자열인 경우, 빈 문자열을 반환한다.
+빈 문자열이 아니라면 문자열을 순회하여
+순서대로 괄호쌍의 갯수가 이어지는 문자열 u, 그 나머지는 문자열 v로 분리하여 문자열의 순회를 멈춘다.
+나뉘어진 문자열 v에 대해 위의 과정을 재귀함수로 반복하여 계산한다.
+연속되는 괄호쌍을 최대한 분리한 후, 나머지 문자열 v를 괄호로 감싸 빈 문자열 str에 넣는다.
+이후 올바른 괄호 문자열 u의 양 끝을 제거한 후, u의 괄호 방향을 뒤집어 str에 이어서 추가한다.
+더 이상 분리할 수 없는 경우 (문자열 u + 재귀함수를 수행하여 반환된 str)을 반환한다.

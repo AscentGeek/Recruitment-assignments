@@ -1,0 +1,32 @@
+function solution(scoville, K) {
+    let scov = Array.from(scoville.sort());
+    let cnt = 0;
+
+    while(scov.some(x => x<K)){
+        let header = scov.shift();
+        if(header < K){
+            scov[0] = header + scov[0]*2;
+            scov = scov.sort((a, b) => a - b);
+            cnt++;
+            console.log(cnt+'회')
+            console.log('header : ' + header);
+            console.log('scoville : ' + scov);
+            console.log('-----')
+        }
+        if(scov.some(x => x<K)){
+            if(scov.length==1) return -1
+        }
+    }
+
+    return cnt;
+}
+
+console.log(solution([1, 2], 8)); // 실행
+// console.log(solution([1, 2, 3, 8, 10, 12], 10));
+
+
+먼저 낮은 수부터 순차적으로 계산하기 위해 배열을 정렬하여 복사한다.
+이렇게 만든 배열을 순회하며 주어진 조건을 참고하여 스코빌 지수의 계산을 반복한다.
+(섞은 음식의 스코빌 지수 = 가장 맵지 않은 음식의 스코빌 지수 + (두 번째로 맵지 않은 음식의 스코빌 지수 * 2))
+이 때, 모든 값이 K보다 커진 경우 총 계산 횟수를 반환하고,
+K보다 낮은 값이 검출되었지만 계산할 원소가 없는 경우 -1을 반환한다.
