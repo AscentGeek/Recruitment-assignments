@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <div class="container-fluid">
@@ -206,7 +207,7 @@
                 <input type="checkbox" id="n_bmonth" value="" v-model="item.target.bmonth" class="form-checkbox" />
               </div>
             </td>
-            </tr>
+          </tr>
           </tbody>
         </table>
       </div>
@@ -245,7 +246,6 @@
 <script>
 import Modal from './common/Modal'
 import {eventBus} from '../main'
-
 export default {
   name: "AddProject",
   components: { Modal },
@@ -294,7 +294,6 @@ export default {
       btn: true
     }
   },
-
   methods:{
     addProject(){
       if(this.project.name != '' && this.project.comp != '' && this.project.cate != '' && this.project.brand != '' && this.project.cate != '' && this.project.used != '') {
@@ -302,7 +301,6 @@ export default {
         const project = this.project
         project.date = this.getDate
         const se = this.se
-
         for (let i in this.enemy){
           if(this.enemy[i].name != "" && this.enemy[i].eURL != ""){
             enemy.push({
@@ -311,7 +309,6 @@ export default {
             })
           }
         }
-
         for (let i in this.se){
           if(this.se[i].engine != "" && this.se[i].ccode != "" && this.se[i].lcode != "" && this.se[i].target != ""){
             se.push({
@@ -324,7 +321,6 @@ export default {
             })
           }
         }
-
         if (this.$route.params.item != undefined) {
           this.$store.commit('updateProject', {project, enemy, se});
         } else {
@@ -341,7 +337,6 @@ export default {
     movePage(){
       this.$router.push('/projects');
     },
-
     addERow() {
       if(this.option < 10) {
         this.enemy.push({
@@ -364,7 +359,6 @@ export default {
         this.soption++
       }
     },
-
     out(){
       this.comment = '페이지를 벗어나시겠습니까?';
       this.btn = false;
@@ -384,7 +378,6 @@ export default {
       eventBus.$emit('select', {select, checked})
     }
   },
-
   computed:{
     getDate(){
       const date = new Date()
@@ -392,7 +385,6 @@ export default {
       return date.toISOString().replace('T', ' ').substring(0, 19)
     }
   },
-
   created(){
     if(this.$route.params.item) {
       this.project = this.$route.params.item
@@ -445,23 +437,18 @@ h5{
 .table-striped tr:nth-child(even) {
   background-color: #e7ebf2;
 }
-
 td div label{
   margin-left:10px;
 }
-
 .footer{
   margin: 5px;
 }
-
 .footer ul{
   margin-top: -40px;
 }
-
 .footer p{
   display: inline-block;
 }
-
 .bold{
   font-weight: bold;
 }
